@@ -58,14 +58,14 @@ UIApplication.sharedApplication.delegate;
 **For example:**
 ```objc
 if (user.isHappy) {
-//Do something
+  //Do something
 }
 else {
-//Do something else
+  //Do something else
 }
 ```
-* There should be exactly one blank line between methods to aid in visual clarity and organization. Whitespace within methods should separate functionality, but often there should probably be new methods.
-* `@synthesize` and `@dynamic` should each be declared on new lines in the implementation.
+* There should be two blank line between methods to aid in visual clarity and organization. Whitespace within methods should separate functionality, but often there should probably be new methods.
+* Where necessary, `@synthesize` and `@dynamic` should each be declared on new lines in the implementation.
 
 ## Conditionals
 
@@ -102,6 +102,13 @@ result = a > b ? x : y;
 **Not:**
 ```objc
 result = a > b ? x = c > d ? c : d : y;
+```
+
+Where applicable, the self-coalescing turnary operator should be used.
+
+**For example:**
+```objc
+result = a ?: b
 ```
 
 ## Error handling
@@ -163,7 +170,7 @@ Property definitions should be used in place of naked instance variables wheneve
 
 #### Variable Qualifiers
 
-When it comes to the variable qualifiers [introduced with ARC](https://developer.apple.com/library/ios/releasenotes/objectivec/rn-transitioningtoarc/Introduction/Introduction.html#//apple_ref/doc/uid/TP40011226-CH1-SW4), the qualifer (`__strong`, `__weak`, `__unsafe_unretained`, `__autoreleasing`) should be placed between the asterisks and the variable name, e.g., `NSString * __weak text`. 
+When it comes to the variable qualifiers [introduced with ARC](https://developer.apple.com/library/ios/releasenotes/objectivec/rn-transitioningtoarc/Introduction/Introduction.html#//apple_ref/doc/uid/TP40011226-CH1-SW4), the qualifer (`__strong`, `__weak`, `__unsafe_unretained`, `__autoreleasing`) should be placed before the type of the variable, e.g., `__weak NSString *text`. 
 
 ## Naming
 
@@ -422,6 +429,8 @@ Singleton objects should use a thread-safe pattern for creating their shared ins
 }
 ```
 This will prevent [possible and sometimes prolific crashes](http://cocoasamurai.blogspot.com/2011/04/singletons-your-doing-them-wrong.html).
+
+Any singleton should also be able to be created using `[[type alloc] init]` and function correctly. Where there are defaults which prevent this from working, dependency injection should be able to be used to create a correctly working instance.
 
 ## Xcode project
 
