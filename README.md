@@ -1,8 +1,6 @@
-# NYTimes Objective-C Style Guide
+# Button Objective-C Style Guide
 
-This style guide outlines the coding conventions of the iOS teams at The New York Times. We welcome your feedback in [issues](https://github.com/NYTimes/objective-c-style-guide/issues) and [pull requests](https://github.com/NYTimes/objective-c-style-guide/pulls). Also, [we’re hiring](http://www.nytco.com/careers/).
-
-Thanks to all of [our contributors](https://github.com/NYTimes/objective-c-style-guide/graphs/contributors).
+This style guide outlines the coding conventions of the iOS team at Button, it was forked from the NYT style guide.
 
 ## Introduction
 
@@ -72,7 +70,7 @@ else {
 }
 ```
 
-* There SHOULD be exactly one blank line between methods to aid in visual clarity and organization.
+* There SHOULD be exactly two blank lines between methods to aid in visual clarity and organization.
 * Whitespace within methods MAY separate functionality, though this inclination often indicates an opportunity to split the method into several, smaller methods. In methods with long or verbose names, a single line of whitespace MAY be used to provide visual separation before the method’s body.
 * `@synthesize` and `@dynamic` MUST each be declared on new lines in the implementation.
 
@@ -113,7 +111,14 @@ result = a > b ? x : y;
 result = a > b ? x = c > d ? c : d : y;
 ```
 
-## Error Handling
+Where applicable, the self-coalescing turnary operator SHOULD be used.
+
+**For example:**
+```objc
+result = a ?: b
+```
+
+## Error handling
 
 When methods return an error parameter by reference, code MUST switch on the returned value and MUST NOT switch on the error variable.
 
@@ -253,13 +258,21 @@ Categories are RECOMMENDED to concisely segment functionality and should be name
 @interface NSString (NYTAdditions)
 ```
 
-Methods and properties added in categories MUST be named with an app- or organization-specific prefix. This avoids unintentionally overriding an existing method, and it reduces the chance of two categories from different libraries adding a method of the same name. (The Objective-C runtime doesn’t specify which method will be called in the latter case, which can lead to unintended effects.)
+Methods and properties added in categories MUST be named with an app or organization-specific prefix. This avoids unintentionally overriding an existing method, and it reduces the chance of two categories from different libraries adding a method of the same name. (The Objective-C runtime [doesn’t specify which method will be called](https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/CustomizingExistingClasses/CustomizingExistingClasses.html#//apple_ref/doc/uid/TP40011210-CH6-SW4) in the latter case, which can lead to unintended effects.)
 
 **For example:**
 
 ```objc
 @interface NSArray (NYTAccessors)
 - (id)nyt_objectOrNilAtIndex:(NSUInteger)index;
+@end
+```
+
+or 
+
+```objc
+@interface NSArray (NYTAccessors)
+- (id)NYT_objectOrNilAtIndex:(NSUInteger)index;
 @end
 ```
 
@@ -347,6 +360,8 @@ CGFloat height = frame.size.height;
 ## Constants
 
 Constants are RECOMMENDED over in-line string literals or numbers, as they allow for easy reproduction of commonly used variables and can be quickly changed without the need for find and replace. Constants MUST be declared as `static` constants. Constants MAY be declared as `#define` when explicitly being used as a macro.
+
+Use your best judgement here. If a string is used only once or twice internally in a class, it MAY be prefereable to omit the declaration of a constant if the class has thorough test coverage.
 
 **For example:**
 
@@ -466,7 +481,7 @@ Singleton objects SHOULD use a thread-safe pattern for creating their shared ins
 
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedInstance = [[[self class] alloc] init];
+        sharedInstance = [[self alloc] init];
     });
 
     return sharedInstance;
@@ -474,9 +489,11 @@ Singleton objects SHOULD use a thread-safe pattern for creating their shared ins
 ```
 This will prevent [possible and sometimes frequent crashes](http://cocoasamurai.blogspot.com/2011/04/singletons-your-doing-them-wrong.html).
 
+Any singleton MUST also be able to be created using `[[ClassName alloc] init]` and function correctly. Internal dependencies MUST be injectable to create a correctly working instance.
+
 ## Imports
 
-If there is more than one import statement, statements MUST be grouped [together](http://ashfurrow.com/blog/structuring-modern-objective-c). Groups MAY be commented.
+If there is more than one import statement, statements MUST be grouped [together](https://ashfurrow.com/blog/structuring-modern-objective-c/#grouping-import-statements). Groups MAY be commented.
 
 Note: For modules use the [@import](http://clang.llvm.org/docs/Modules.html#using-modules) syntax.
 
