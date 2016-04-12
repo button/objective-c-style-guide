@@ -22,6 +22,7 @@ This style guide conforms to IETF's [RFC 2119](http://tools.ietf.org/html/rfc211
 * [Error handling](#error-handling)
 * [Methods](#methods)
 * [Variables](#variables)
+* [Generics](#generics)
 * [Naming](#naming)
   * [Categories](#categories)
 * [Comments](#comments)
@@ -111,7 +112,7 @@ result = a > b ? x : y;
 result = a > b ? x = c > d ? c : d : y;
 ```
 
-Where applicable, the self-coalescing turnary operator SHOULD be used.
+Where applicable, the self-coalescing ternary operator SHOULD be used.
 
 **For example:**
 ```objc
@@ -238,6 +239,78 @@ Instance variables MUST be camel-case with the leading word being lowercase, and
 
 ```objc
 id varnm;
+```
+
+## Generics
+
+When declaring a property, method parameter or block parameter that is a collection type (e.g `NSDictionary`, `NSArray`, etc.), they MUST specify the compile-time type of the objects contained in them. Local declarations of collection types MAY omit the contents type specification if the context makes its contents type clear.
+
+**For example:**
+
+```objc
+@interface BTNEvent: NSObject
+
+@property (nonatomic, strong) NSDictionary<NSString *, NSString *> *properties;
+@property (nonatomic, strong) NSArray<NSString *> *flags;
+
+@end
+```
+
+**Not:**
+
+```objc
+@interface BTNItem: NSObject
+
+@property (nonatomic, strong) NSDictionary *properties;
+@property (nonatomic, strong) NSArray *flags;
+
+@end
+```
+
+When specifying a collection’s contents type, the collection type SHOULD be immediately followed by an opening angle bracket `<`, followed by the contents type name, a single space, the pointer `*`, and the closing angle bracket. Like other [variables](#variables), there SHOULD be a single space after the closing angle bracket `>` followed by the pointer `*` attached to the variable name.
+
+**For example:**
+
+```objc
+NSArray<NSString *> *names;
+
+- (void)setNames:(NSArray<NSString *> *)names;
+
+typedef void(^block)(NSArray<NSString *> *names);
+```
+
+**Not:**
+
+```objc
+NSArray <NSString *> *names;
+NSArray<NSString*> *names;
+NSArray<NSString *>*names;
+
+- (void)setNames:(NSArray<NSString *> *)names;
+- (void)setNames:(NSArray<NSString*> *)names;
+- (void)setNames:(NSArray<NSString *>*)names;
+```
+
+An `NSDictionary` collection SHOULD use the same contents type declaration format separating types by a comma and a single space.
+
+**For example:**
+
+```objc
+NSDictionary<NSString *, NSString *> *properties;
+```
+
+**Not:**
+
+```objc
+NSDictionary<NSString *,NSString *> *properties;
+```
+
+Use your best judgement when declaring collections that contain other collections. Such declarations can quickly become verbose and less understandable. One acceptable example MAY be an `NSDictionary` with a `NSString` key type with a `NSArray`.
+
+**For example:**
+
+```objc
+NSDictionary<NSString *, NSArray<NSString *> *> *properties;
 ```
 
 ### Categories
