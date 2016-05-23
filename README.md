@@ -1,6 +1,6 @@
 # Button Objective-C Style Guide
 
-This style guide outlines the coding conventions of the iOS team at Button, it was forked from the NYT style guide.
+This style guide outlines the coding conventions of the iOS team at Button. It was forked from the [NYT style guide](https://github.com/NYTimes/objective-c-style-guide).
 
 ## Introduction
 
